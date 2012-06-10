@@ -55,6 +55,14 @@ There should only be one character you should need to escape. The *@*-sign.
 
 The other special characters have to be used at special places - like the start of a line - to be treated special.
 
+You should not need to use brackets ever. Not even in scala constructs like
+
+    list.foreach{ a => a.toUpper }
+
+or
+
+    for( p <- products){ p.name }
+
 ### Variables and Logic ###
 TODO
 
