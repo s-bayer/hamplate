@@ -62,6 +62,9 @@ TODO
 ### Control flow ###
 The basic control structures in scala are *if*, *for* and *match*
 
+Hamplate compiles down to scala code (or play templates, which compile to scala code),
+so all control structures are like the scala ones. Except *unless*, which renders like *if not*.
+
 TODO match syntax
 
 All control structures need to be on their own line in the template document.
@@ -70,13 +73,22 @@ All control structures need to be on their own line in the template document.
 #### if and unless ####
     - if 3 > 2
       em true
+      
     - if 2 > 3
       em false
+    - else
+      em true
+      
     - unless 3 > 2
       em true
+    - else
+      em false
+      
     - unless 2 > 3
       em false
 renders to
 
     <em> true </em>
+    <em> true </em>
+    <em> false </em>
     <em> false </em>
