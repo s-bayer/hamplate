@@ -64,8 +64,17 @@ or
     for( p <- products){ p.name }
 
 ### Variables and Logic ###
-TODO
+You can use any scala code in your templates.
+Scala code is started with an *@*-sign, like in
 
+    @import views.helpers.myhelper
+    @myvar=3
+    @list.foreach@{ a => a.toUpper }
+    @myclass.mymethod@{myvar}
+    @myclass.mymethod(myvar)
+
+The second @ in the third and fourth line is needed, since everything between *{}* is treated as template code.
+If you don't want to have something evaluated as template code, you can use *()* instead.
 
 ### Control flow ###
 The basic control structures in scala are *if*, *for* and *match*
