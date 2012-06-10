@@ -51,17 +51,15 @@ renders to
     </html>
 
 ### Design philosophy ###
-There should only be one character you should need to escape. The *@*-sign.
+#### Less concepts vs terse syntax ####
+*There should only be a very limited amount of concepts*
 
-The other special characters have to be used at special places - like the start of a line - to be treated special.
+*You should only need to type as few characters as possible*
 
-You should not need to use brackets ever. Not even in scala constructs like
-
-    list.foreach{ a => a.toUpper }
-
-or
-
-    for( p <- products){ p.name }
+To achieve those goals there are some basic concept used in hamplates
+* The first symbol in a line (or the absence of such) determines how this line is interpreted
+* Besides that there is only one special symbol: The *@*-sign. It is used to escape scala code
+* You should not need to use brackets ever. Not even in scala constructs.
 
 ### Variables and Logic ###
 You can use any scala code in your templates.
