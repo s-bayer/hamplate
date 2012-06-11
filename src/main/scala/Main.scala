@@ -9,7 +9,11 @@ object Sample {
     and it's children
     which should not show up
   body
-    em Some text"""
+    em Some text
+    h2 Headline
+    form
+      input type=text
+      a href='www.example.com' @ The example"""
 }
 
 object Tree {
@@ -50,8 +54,9 @@ class Line(text: String, parent: Option[Tree[String]]) extends Node[String](pare
             line.addChild(l)
           }
         }
+      } else {
+        lastItem = Some(l)
       }
-      lastItem = Some(l)
     }
   }
 
@@ -87,17 +92,26 @@ object TagInterpreter extends Interpreter {
     }
   }
 
+  def debug(line:Line):String = {
+    return ""
+    val deb = line.parent match {
+      case Some(p) => p.asInstanceOf[Line].value
+      case _ => "-"
+    }
+    "("+deb+")"
+  }
+
   def renderWithoutChildren(line:Line):String = {
     var result="  "*line.depth
 
     tailofline(line) match {
       case Some(tail) => {
-        result += "<"+linesign(line)+">"
+        result += "<"+linesign(line)+debug(line)+">"
         result += " "+tail.trim+" "
         result += "</"+linesign(line)+">\n"
       }
       case _ => {
-        result += "<"+linesign(line)+"/>\n"
+        result += "<"+linesign(line)+debug(line)+"/>\n"
       }
     }
     result
@@ -105,7 +119,7 @@ object TagInterpreter extends Interpreter {
 
   def renderWithChildren(line: Line):String = {
     // Only here linesign is used as a tag
-    var result=("  "*line.depth)+"<"+linesign(line)+">\n"
+    var result=("  "*line.depth)+"<"+linesign(line)+debug(line)+">\n"
     tailofline(line) match {
       case Some(tail) => result += ("  "*(line.depth+1))+tail.trim + "\n"
       case _ => ()
