@@ -13,7 +13,7 @@ object Sample {
     h2 Headline
     form
       input type=text
-      a href='www.example.com' @ The example"""
+      a href='www.example.com' The example"""
 }
 
 object Tree {
@@ -52,8 +52,11 @@ class Line(text: String, parent: Option[Tree[String]]) extends Node[String](pare
             "\tintendation is "+l.intendation+" but should be "+neededIntendation)
           case Some(line) => {
             line.addChild(l)
+            line.clean
           }
         }
+        if(l.value.contains("form"))
+          println("after "+neededIntendation+"|"+l.depth*2)
       } else {
         lastItem = Some(l)
       }
@@ -93,7 +96,7 @@ object TagInterpreter extends Interpreter {
   }
 
   def debug(line:Line):String = {
-    return ""
+    // return ""
     val deb = line.parent match {
       case Some(p) => p.asInstanceOf[Line].value
       case _ => "-"
