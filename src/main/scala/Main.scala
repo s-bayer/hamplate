@@ -8,7 +8,7 @@ object Sample {
   / my comment
     and it's children
     which should not show up
-  body content="test"
+  body content="test" Testtext
     em Some text
     h2 Headline
     form.class1.class2#id.class3
@@ -86,16 +86,35 @@ object CommentInterpreter extends Interpreter {
 }
 
 object TagInterpreter extends Interpreter {
-  case class Tag(tagname: String, attributes: String, content: String) {
-    def toHtml = {
-      
+  case class Tag(var tagname: String, depth: Int, var attributes: String, var content: String) {
+    val prepend = "  "*depth
+
+    def toHtml: String = {
+      var result = ""
+     
+      if(content.trim != "") {
+        result += prepend+"<"+tagname+" "+attributes+">\n"
+        result += prepend+"  "+content.trim
+        result += prepend+"</"+tagname+">"
+      } else {
+        result += prepend+"<"+tagname+" "+attributes+"/>"
+      }
+      result
+    }
+  }
+  object Tag{
+    def buildFrom(line: Line) : Tag = {
+      Tag(tagname=linesign(line),
+        line.depth,
+        attributes="",
+        content="")
     }
   }
 
   override def sign = ""
   override def toHtml(line: Line):String = {
     if(line.hasChildren) {
-      renderWithChildren(line)
+      renderWithChildren(line).toHtml
     } else {
       renderWithoutChildren(line)
     }
@@ -124,6 +143,7 @@ object TagInterpreter extends Interpreter {
     }
   }
 
+  // Used to convert "tagname.class1#bla.class2" to <tagname class="class1 class2" id="bla">
   def parseTag(line: Line):String = {
     ""
   }
@@ -133,7 +153,7 @@ object TagInterpreter extends Interpreter {
 
     tailofline(line) match {
       case Some(tail) => {
-        val(attributes, text) = parseTail(tail.trim)
+        val (attributes, text) = parseTail(tail.trim)
         result += "<"+linesign(line)+" "+attributes+" "+debug(line)+">"
         result += " "+text+" "
         result += "</"+linesign(line)+">\n"
@@ -145,21 +165,20 @@ object TagInterpreter extends Interpreter {
     result
   }
 
-  def renderWithChildren(line: Line):String = {
+  def renderWithChildren(line: Line):Tag = {
     // Only here linesign is used as a tag
-    var result=("  "*line.depth)
+    var result=Tag.buildFrom(line)
     tailofline(line) match {
       case Some(tail) => {
-        val(attributes, text) = parseTail(tail.trim)
-        result += "<"+linesign(line)+" "+attributes+" "+debug(line)+">\n"
+        val (attributes, text) = parseTail(tail.trim)
+        result.attributes = attributes
         if(text.trim != "") {
-          result += ("  "*(line.depth+1))+text + "\n"
+          result.content = text+"\n"
         }
       }
       case _ => ()
     }
-    result += processChildren(line)
-    result += ("  "*line.depth)+"</"+linesign(line)+">\n"
+    result.content += processChildren(line)
     result
   }
 }
