@@ -8,7 +8,7 @@ object Sample {
   / my comment
     and it's children
     which should not show up
-  body content=test
+  body content="test"
     em Some text
     h2 Headline
     form.class1.class2#id.class3
@@ -86,6 +86,12 @@ object CommentInterpreter extends Interpreter {
 }
 
 object TagInterpreter extends Interpreter {
+  case class Tag(tagname: String, attributes: String, content: String) {
+    def toHtml = {
+      
+    }
+  }
+
   override def sign = ""
   override def toHtml(line: Line):String = {
     if(line.hasChildren) {
@@ -118,6 +124,10 @@ object TagInterpreter extends Interpreter {
     }
   }
 
+  def parseTag(line: Line):String = {
+    ""
+  }
+
   def renderWithoutChildren(line:Line):String = {
     var result="  "*line.depth
 
@@ -137,9 +147,15 @@ object TagInterpreter extends Interpreter {
 
   def renderWithChildren(line: Line):String = {
     // Only here linesign is used as a tag
-    var result=("  "*line.depth)+"<"+linesign(line)+debug(line)+">\n"
+    var result=("  "*line.depth)
     tailofline(line) match {
-      case Some(tail) => result += ("  "*(line.depth+1))+tail.trim + "\n"
+      case Some(tail) => {
+        val(attributes, text) = parseTail(tail.trim)
+        result += "<"+linesign(line)+" "+attributes+" "+debug(line)+">\n"
+        if(text.trim != "") {
+          result += ("  "*(line.depth+1))+text + "\n"
+        }
+      }
       case _ => ()
     }
     result += processChildren(line)
