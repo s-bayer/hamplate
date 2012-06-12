@@ -8,12 +8,14 @@ object Sample {
   / my comment
     and it's children
     which should not show up
-  body
+  body content=test
     em Some text
     h2 Headline
-    form
-      input type=text
-      a href='www.example.com' The example"""
+    form.class1.class2#id.class3
+      input#myid.class.class2 type='text'
+      a href="www.example.com" class="test" The example"""
+  // TODO Throw error, wenn a attribute value has the form "bla' or 'bla"
+  // TODO Allow omitting '' and "" on attribute values
 }
 
 object Tree {
@@ -55,8 +57,6 @@ class Line(text: String, parent: Option[Tree[String]]) extends Node[String](pare
             line.clean
           }
         }
-        if(l.value.contains("form"))
-          println("after "+neededIntendation+"|"+l.depth*2)
       } else {
         lastItem = Some(l)
       }
@@ -96,7 +96,7 @@ object TagInterpreter extends Interpreter {
   }
 
   def debug(line:Line):String = {
-    // return ""
+    return ""
     val deb = line.parent match {
       case Some(p) => p.asInstanceOf[Line].value
       case _ => "-"
@@ -104,13 +104,28 @@ object TagInterpreter extends Interpreter {
     "("+deb+")"
   }
 
+  def parseTail(value: String):(String,String) = {
+    // match any valid attribute key
+    val keyRegex = """([\w\-]+)"""
+    // match any valid string (only double quoted)
+    val valueRegex = """(["']([^"]|\\")*["'])"""
+    val attributeRegex = "("+keyRegex+"="+valueRegex+"""\s*)"""
+    // find all attributes in the first group and the rest of the text in the second
+    val MatchRegex = ("("+attributeRegex+"*)"+"(.*)").r//"""(.*)""".r//
+
+    value match {
+      case MatchRegex(a,b,c,d,e,f) => {(a,f)}
+    }
+  }
+
   def renderWithoutChildren(line:Line):String = {
     var result="  "*line.depth
 
     tailofline(line) match {
       case Some(tail) => {
-        result += "<"+linesign(line)+debug(line)+">"
-        result += " "+tail.trim+" "
+        val(attributes, text) = parseTail(tail.trim)
+        result += "<"+linesign(line)+" "+attributes+" "+debug(line)+">"
+        result += " "+text+" "
         result += "</"+linesign(line)+">\n"
       }
       case _ => {
