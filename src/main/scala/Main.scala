@@ -91,13 +91,20 @@ object TagInterpreter extends Interpreter {
 
     def toHtml: String = {
       var result = ""
-     
-      if(content.trim != "") {
+      
+      // Multiline content
+      if(content.trim.contains("\n")) {
         result += prepend+"<"+tagname+" "+attributes+">\n"
-        result += prepend+"  "+content.trim
-        result += prepend+"</"+tagname+">"
+        result += prepend+"  "+content.trim+"\n"
+        result += prepend+"</"+tagname+">\n"
+      // Single Line content
+      } else if(content.trim != "") {
+        result += prepend+"<"+tagname+" "+attributes+"> "
+        result += content.trim
+        result += " </"+tagname+">\n"
+      // Empty tag
       } else {
-        result += prepend+"<"+tagname+" "+attributes+"/>"
+        result += prepend+"<"+tagname+" "+attributes+"/>\n"
       }
       result
     }
@@ -116,7 +123,7 @@ object TagInterpreter extends Interpreter {
     if(line.hasChildren) {
       renderWithChildren(line).toHtml
     } else {
-      renderWithoutChildren(line)
+      renderWithoutChildren(line).toHtml
     }
   }
 
@@ -148,19 +155,16 @@ object TagInterpreter extends Interpreter {
     ""
   }
 
-  def renderWithoutChildren(line:Line):String = {
-    var result="  "*line.depth
+  def renderWithoutChildren(line:Line):Tag = {
+    var result=Tag.buildFrom(line)
 
     tailofline(line) match {
       case Some(tail) => {
         val (attributes, text) = parseTail(tail.trim)
-        result += "<"+linesign(line)+" "+attributes+" "+debug(line)+">"
-        result += " "+text+" "
-        result += "</"+linesign(line)+">\n"
+        result.attributes = attributes
+        result.content = text
       }
-      case _ => {
-        result += "<"+linesign(line)+debug(line)+"/>\n"
-      }
+      case _ => ()
     }
     result
   }
