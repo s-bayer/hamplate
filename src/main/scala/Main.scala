@@ -16,6 +16,10 @@ object Sample {
     / 
     - if a > 3
       h2 yay
+    - else
+      h3 nay
+    - for p <- projects
+      h2 @p.name
     form.class1.class2#id.class3 class="existingclass"
       input#myid.class.class2 type='text'
       a href="www.example.com" class="test" The example"""

@@ -18,6 +18,8 @@ class Line(text: String, parent: Option[Tree[String]]) extends Node[String](pare
     untrimmed.indexWhere(_ != ' ')
   }
 
+  def prepend = "  "*depth
+
   override var children : Seq[Tree[String]]= {
     text.split("\n").tail.map(new Line(_, Some(this)))
   }
