@@ -7,7 +7,9 @@ object ControlflowInterpreter extends Interpreter {
     stmt.kind match {
       case 'if => {
         res += "@"+stmt.keyword+"("+stmt.arguments+") {\n"
-      } case 'else => {
+      } case 'unless => {
+        res += "@"+"if"+"(!("+stmt.arguments+")) {\n"
+      }case 'else => {
         res += stmt.keyword+" {\n"
       } case 'for => {
         res += "@"+stmt.keyword+"("+stmt.arguments+") {\n"

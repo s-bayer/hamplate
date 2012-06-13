@@ -16,6 +16,8 @@ object Sample {
     / 
     - if a > 3
       h2 yay
+    - unless a > 3
+      h4
     - else
       h3 nay
     - for p <- projects
