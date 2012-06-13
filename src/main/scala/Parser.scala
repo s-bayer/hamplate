@@ -45,10 +45,8 @@ class Line(text: String, parent: Option[Tree[String]]) extends Node[String](pare
 
   clean
 
-  def interpreters = Seq(CommentInterpreter)
-
   def toHtml:String= {
-    for(i <- interpreters) {
+    for(i <- Interpreter.interpreters) {
       if(i canInterpret this){
         return i.toHtml(this)
       }

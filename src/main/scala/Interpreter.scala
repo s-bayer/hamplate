@@ -27,3 +27,7 @@ abstract class Interpreter {
   def sign: String
   def toHtml(l: Line): String
 }
+
+object Interpreter {
+  def interpreters = Seq(CommentInterpreter, ControlflowInterpreter)
+}
