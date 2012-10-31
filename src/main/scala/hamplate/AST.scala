@@ -31,8 +31,7 @@ class Root extends AST {
     childrenToHtml
 }
 
-class TextNode(intendation: Int, val content: String) extends AST {
-  override def toString = children.mkString("{", ",", "}")
+case class TextNode(intendation: Int, val content: String) extends AST {
   override def toHtml: String =
     if (children.nonEmpty)
       indent(intendation) + content + "\n" +
@@ -41,7 +40,7 @@ class TextNode(intendation: Int, val content: String) extends AST {
       indent(intendation) + content + "\n"
 }
 
-class FilterNode(intendation: Int, val content: String) extends AST {
+case class FilterNode(intendation: Int, val content: String) extends AST {
   // TODO SB check that all children are TextNodes or maybe comment nodes
   override def toHtml: String =
     if (content.trim == "javascript")
@@ -51,7 +50,7 @@ class FilterNode(intendation: Int, val content: String) extends AST {
     else throw new Error("unknown filter type")
 }
 
-class TagNode(intendation: Int, val content: String) extends AST {
+case class TagNode(intendation: Int, val content: String) extends AST {
   // TODO SB interpret .class #id and ignore attributes in closing tag
   override def toHtml: String = {
     /*val tagR = """([^.#\s]+)"""
@@ -90,31 +89,45 @@ object TextBuilder extends Builder {
 }
 
 object FilterBuilder extends Builder {
-  override def apply(intendation: Int, c: String) = new FilterNode(intendation, c)
+  override def apply(intendation: Int, c: String) =
+    if (c.trim.isEmpty) ASTBuilder.error("Empty filter builder (:)")
+    else new FilterNode(intendation, c)
 }
 
 object TagBuilder extends Builder {
-  override def apply(intendation: Int, c: String) = new TagNode(intendation, c)
+  override def apply(intendation: Int, c: String) =
+    if (c.trim.isEmpty) ASTBuilder.error("Empty tag (%)")
+    else new TagNode(intendation, c)
 }
 
 /**
  * Used to convert #id to %div#id
  */
 object IdShortcutBuilder extends Builder {
-  override def apply(intendation: Int, c: String) = TagBuilder.apply(intendation, "div#" + c)
+  override def apply(intendation: Int, c: String) =
+    if (c.trim.isEmpty) ASTBuilder.error("Empty id shortcut (#)")
+    else TagBuilder.apply(intendation, "div#" + c)
 }
 
 /**
  * Used to convert .class to %div.class
  */
 object ClassShortcutBuilder extends Builder {
-  override def apply(intendation: Int, c: String) = TagBuilder.apply(intendation, "div." + c)
+  override def apply(intendation: Int, c: String) =
+    if (c.trim.isEmpty) ASTBuilder.error("Empty class shortcut (.)")
+    else TagBuilder.apply(intendation, "div." + c)
 }
 
 object ASTBuilder {
+  var line = 1
+
+  def error(msg: String) =
+    throw new Error(msg + " in line '" + line + "'")
+
   private def makeAST(currentAst: AST, remaining: Seq[Token], builder: Builder = TextBuilder, intendation: Int = 0): AST = remaining match {
     case x :: xs => x match {
       case x: Newline =>
+        line += 1
         // Reset intendation
         makeAST(currentAst, xs)
       case x: Intendation =>
@@ -133,6 +146,8 @@ object ASTBuilder {
       currentAst
   }
 
-  def build(tokens: Seq[Token]): AST =
+  def build(tokens: Seq[Token]): AST = {
+    line = 1
     makeAST(new Root, tokens)
+  }
 }

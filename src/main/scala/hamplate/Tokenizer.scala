@@ -46,18 +46,22 @@ object Tokenizer {
 
   private def makeToken(line: String): List[Token] = {
     val (token, string) = (Intendation.matches orElse LineType.matches orElse RestOfLine.matches)(line.toList)
-    if (string.isEmpty) List(token)
+    if (string.isEmpty) token match {
+      case RestOfLine(_) => List(token)
+      // needed to throw an error on lines like "  #"
+      case _ => List(token, new RestOfLine(""))
+    }
     else token :: makeToken(string)
   }
 
   /**
-   * Convert a list of lines to a list of Tokens per line
+   * Convert a list of lines to a list of tokens
    */
   def tokenize(lines: Seq[String]): Seq[Token] = {
     val tokensByLine = for (l <- lines) yield makeToken(l)
 
     // fold and remove first newline
-    if (tokensByLine.isEmpty) Seq[Token]()
-    else tokensByLine.foldLeft(Seq[Token]())((a, b) => a ++ Seq(new Newline) ++ b).tail
+    if (tokensByLine.isEmpty) Seq[Token](new Newline)
+    else tokensByLine.foldLeft(Seq[Token]())((a, b) => a ++ Seq(new Newline) ++ b).tail ++ Seq(new Newline)
   }
 }
