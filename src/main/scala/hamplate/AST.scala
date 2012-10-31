@@ -80,6 +80,13 @@ case class TagNode(intendation: Int, val content: String) extends AST {
   }
 }
 
+case class ErrorNode(intendation: Int, error: String) extends AST {
+  val ErrorSymbol = "@/"
+  override def toHtml: String =
+    ErrorSymbol + error + "\n" +
+      childrenToHtml
+}
+
 sealed abstract class Builder {
   def apply(intendation: Int, c: String): AST
 }
@@ -90,13 +97,13 @@ object TextBuilder extends Builder {
 
 object FilterBuilder extends Builder {
   override def apply(intendation: Int, c: String) =
-    if (c.trim.isEmpty) ASTBuilder.error("Empty filter builder (:)")
+    if (c.trim.isEmpty) ASTBuilder.error(intendation, "Empty filter builder (:)")
     else new FilterNode(intendation, c)
 }
 
 object TagBuilder extends Builder {
   override def apply(intendation: Int, c: String) =
-    if (c.trim.isEmpty) ASTBuilder.error("Empty tag (%)")
+    if (c.trim.isEmpty) ASTBuilder.error(intendation, "Empty tag (%)")
     else new TagNode(intendation, c)
 }
 
@@ -105,7 +112,7 @@ object TagBuilder extends Builder {
  */
 object IdShortcutBuilder extends Builder {
   override def apply(intendation: Int, c: String) =
-    if (c.trim.isEmpty) ASTBuilder.error("Empty id shortcut (#)")
+    if (c.trim.isEmpty) ASTBuilder.error(intendation, "Empty id shortcut (#)")
     else TagBuilder.apply(intendation, "div#" + c)
 }
 
@@ -114,15 +121,46 @@ object IdShortcutBuilder extends Builder {
  */
 object ClassShortcutBuilder extends Builder {
   override def apply(intendation: Int, c: String) =
-    if (c.trim.isEmpty) ASTBuilder.error("Empty class shortcut (.)")
+    if (c.trim.isEmpty) ASTBuilder.error(intendation, "Empty class shortcut (.)")
     else TagBuilder.apply(intendation, "div." + c)
 }
 
-object ASTBuilder {
-  var line = 1
+object Printer {
+  val Reset = "\u001B[0m"
+  val Black = "\u001B[30m"
+  val Red = "\u001B[31m"
+  val Green = "\u001B[32m"
+  val Yellow = "\u001B[33m"
+  val Blue = "\u001B[34m"
+  val Purple = "\u001B[35m"
+  val Cyan = "\u001B[36m"
+  val White = "\u001B[37m"
 
-  def error(msg: String) =
-    throw new Error(msg + " in line '" + line + "'")
+  def red(s: String) =
+    Red + s + Reset
+
+  def blue(s: String) =
+    Blue + s + Reset
+
+  def cSuccess(s: String) =
+    Green + s + Reset
+
+  def cError(s: String) =
+    Red + s + Reset
+
+  def cLine(s: String) =
+    Cyan + s + Reset
+}
+
+object ASTBuilder {
+  import Printer._
+  var line = 1
+  var errors: List[String] = Nil
+
+  def error(intendation: Int, msg: String) = {
+    errors = errors :+ " - " + cError("Error") + " on line " + cLine("[" + line + "]") + ": " + msg
+    new ErrorNode(intendation, "ERROR at [" + line + "]: " + msg)
+  }
 
   private def makeAST(currentAst: AST, remaining: Seq[Token], builder: Builder = TextBuilder, intendation: Int = 0): AST = remaining match {
     case x :: xs => x match {
@@ -146,8 +184,13 @@ object ASTBuilder {
       currentAst
   }
 
-  def build(tokens: Seq[Token]): AST = {
+  /**
+   * returns the AST and eventually some errors
+   */
+  def build(tokens: Seq[Token]): (AST, List[String]) = {
     line = 1
-    makeAST(new Root, tokens)
+    errors = Nil
+    val ast = makeAST(new Root, tokens)
+    (ast, errors)
   }
 }

@@ -4,7 +4,24 @@ import java.io.File
 import scala.io.Source
 import java.io.PrintWriter
 
+object StatusUpdater {
+  private val InitStatus = "Finished"
+  private val Init = "* [" + InitStatus + "] "
+  def update(status: String) {
+    if (status.size > InitStatus.size)
+      throw new Error("Could not update the status since '" + status + "' is too long")
+    else
+      print("\r* [" + status.padTo(InitStatus.size, " ").mkString + "] ")
+  }
+
+  def updateUnsafe(status: String) {
+    print("\r* [" + (status.padTo(InitStatus.size, " ").mkString) + "] ")
+  }
+}
+
 object FileManager {
+  import Printer._
+  import StatusUpdater._
   private val extension = ".hpt"
 
   private def printToFile(f: File)(op: PrintWriter => Unit) {
@@ -18,26 +35,35 @@ object FileManager {
   }
 
   private def compile(file: File, targetDir: String) {
-    print("* " + file.getName() + ".")
+    println()
+    update(".")
+    print(file.getName())
 
     // split into lines
     val source = Source.fromFile(file)
     val lines = for (line <- source.getLines) yield line
     val split = lines.toSeq
-    print(".")
+    update("..")
 
     // tokenize
     val tokens = Tokenizer.tokenize(split)
-    print(".")
+    update("...")
 
     // parse
-    val output = ASTBuilder.build(tokens).toHtml
-    print(".")
+    val (ast, errors) = ASTBuilder.build(tokens)
+    val output = ast.toHtml
+    update("....")
 
     // write to file
 
-    println(".")
     save(new File(targetDir + "/" + file.getName().dropRight(extension.size) + ".scala.html"), output)
+    if (errors.isEmpty) {
+      updateUnsafe(cSuccess("Finished"))
+      print("\n")
+    } else {
+      updateUnsafe(cError("Error   "))
+      print("\n" + errors.mkString("\n"))
+    }
   }
 
   def compileFiles(src: File, targetDir: String) {
