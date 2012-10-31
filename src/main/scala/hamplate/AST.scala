@@ -97,6 +97,20 @@ object TagBuilder extends Builder {
   override def apply(intendation: Int, c: String) = new TagNode(intendation, c)
 }
 
+/**
+ * Used to convert #id to %div#id
+ */
+object IdShortcutBuilder extends Builder {
+  override def apply(intendation: Int, c: String) = TagBuilder.apply(intendation, "div#" + c)
+}
+
+/**
+ * Used to convert .class to %div.class
+ */
+object ClassShortcutBuilder extends Builder {
+  override def apply(intendation: Int, c: String) = TagBuilder.apply(intendation, "div." + c)
+}
+
 object ASTBuilder {
   private def makeAST(currentAst: AST, remaining: Seq[Token], builder: Builder = TextBuilder, intendation: Int = 0): AST = remaining match {
     case x :: xs => x match {
@@ -108,6 +122,8 @@ object ASTBuilder {
       case LineType(c) => c match {
         case ":" => makeAST(currentAst, xs, FilterBuilder, intendation)
         case "%" => makeAST(currentAst, xs, TagBuilder, intendation)
+        case "#" => makeAST(currentAst, xs, IdShortcutBuilder, intendation)
+        case "." => makeAST(currentAst, xs, ClassShortcutBuilder, intendation)
         case _ => throw new Error("unknown LineType(" + c + ")")
       }
       case RestOfLine(c) =>

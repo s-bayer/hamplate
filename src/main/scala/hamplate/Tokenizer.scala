@@ -25,7 +25,7 @@ object Intendation extends Matcher {
 case class LineType(content: String) extends Token
 object LineType extends Matcher {
   // TODO SB allow class and id
-  val knownTypes = Seq("%",":")//Seq("%", ".", "#", ":")
+  val knownTypes = Seq("%", ".", "#", ":")
   override def matches = {
     case x :: xs if knownTypes.contains(x + "") => (new LineType(x + ""), xs.mkString(""))
   }
