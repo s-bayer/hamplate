@@ -27,7 +27,7 @@
     .stuff
       even more stuff
 
-%section#footer
+%section#footer.bottom
   The footer
 
 :javascript

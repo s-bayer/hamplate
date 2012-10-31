@@ -24,32 +24,32 @@ object worksheet {
                                                   //|     <li>
                                                   //|       <a href = "#devices-tab">
                                                   //|         Devices
-                                                  //|       </a href = "#devices-tab">
+                                                  //|       </a>
                                                   //|     </li>
-                                                  //|     <li.active>
+                                                  //|     <li class="active">
                                                   //|       <a href = "#options-tab">
                                                   //|         System Options
-                                                  //|       </a href = "#options-tab">
-                                                  //|     </li.active>
+                                                  //|       </a>
+                                                  //|     </li>
                                                   //|     <li>
                                                   //|       <a href = "#reports-tab">
                                                   //|         Reports
-                                                  //|       </a href = "#reports-tab">
+                                                  //|       </a>
                                                   //|     </li>
                                                   //|     <li>
                                                   //|       <a href = "#notes-tab">
                                                   //|         Notes
-                                                  //|       </a href = "#notes-tab">
+                                                  //|       </a>
                                                   //|     </li>
                                                   //|   </ul>
                                                   //| 
-                                                  //| <section#intro>
-                                                  //|   <h1.page-header>
+                                                  //| <section id="intro">
+                                                  //|   <h1 class="page-header">
                                                   //|     Sample page
-                                                  //|   </h1.page-header>
-                                                  //| </section#intro>
+                                                  //|   </h1>
+                                                  //| </section>
                                                   //| 
-                                                  //| <section#more-stuff>
+                                                  //| <section id="more-stuff">
                                                   //|   Some more stuff
                                                   //|   #stuff-list
                                                   //|     .stuff
@@ -58,15 +58,18 @@ object worksheet {
                                                   //|       some more stuff
                                                   //|     .stuff
                                                   //|       even more stuff
-                                                  //| </section#more-stuff>
+                                                  //| </section>
                                                   //| 
-                                                  //| <section#footer>
+                                                  //| <section id="footer" class="bottom">
                                                   //|   The footer
-                                                  //| </section#footer>
+                                                  //| </section>
                                                   //| 
                                                   //| <script type="text/javascript">
-                                                  //|   $(document).ready(
-                                                  //| Output exceeds cutoff limit.
+                                                  //|   $(document).ready(function() {
+                                                  //|   $( "#dummy" ).dummy();
+                                                  //|   });
+                                                  //| </script>
+                                                  //| "
 
   println("finished")                             //> finished
 
