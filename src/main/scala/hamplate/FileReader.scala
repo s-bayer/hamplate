@@ -14,13 +14,13 @@ object FileReader {
   /**
    * Read a resource file an split it into lines
    */
-  def readLines(path: String) {
+  def readLines(path: String) : Seq[String] = {
     val classLoader: ClassLoader = Thread.currentThread().getContextClassLoader();
     val url: URL = classLoader.getResource(path);
     val file: File = new File(url.toURI());
     
     val source = Source.fromFile(file)
-    for (line <- source.getLines)
-      println(line)
+    val lines = for (line <- source.getLines) yield line
+    lines.toSeq
   }
 }
