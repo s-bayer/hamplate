@@ -40,13 +40,32 @@ object FileManager {
     save(new File(targetDir + "/" + file.getName().dropRight(extension.size) + ".scala.html"), output)
   }
 
-  def compile(sourceDir: String, targetDir: String) {
+  def compileFiles(src: File, targetDir: String) {
     try {
-      val files = new java.io.File(sourceDir).listFiles.filter(_.getName.endsWith(extension))
-      println("Compiling " + files.size + " files in folder " + sourceDir)
-      files.map { compile(_, targetDir) }
+      if (src.isDirectory()) {
+        val dir = src.listFiles
+        val files = dir.filter(_.getName.endsWith(extension))
+
+        println("Compiling " + files.size + " files in folder " + src.getName())
+        files.map { compile(_, targetDir) }
+
+        for (f <- dir) {
+          if (f.isDirectory) compileFiles(f, targetDir + "/" + f.getName())
+        }
+      } else
+        throw new Error("source folder ( " + src.getName() + " ) is not a directory.")
     } catch {
-      case e: NullPointerException => throw new Error("source folder ( " + sourceDir + " ) doesn't exist.");
+      case e: NullPointerException => throw new Error("source folder ( " + src.getName() + " ) doesn't exist.")
     }
+  }
+
+  def compile(sourceDir: String, targetDir: String) {
+    println("begin compiling files in '" + sourceDir + "' to '" + targetDir + "'")
+    try {
+      compileFiles(new File(sourceDir), targetDir)
+    } catch {
+      case e: NullPointerException => throw new Error("source folder ( " + sourceDir + " ) doesn't exist.")
+    }
+    println("compilation finished\n")
   }
 }
