@@ -2,21 +2,42 @@ package hamplate
 
 object worksheet {
   println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
+
+  FileManager.compile(".", ".")                   //> ./artifacts.xml
+                                                  //| ./configuration
+                                                  //| ./features
+                                                  //| ./p2
+                                                  //| ./eclipse
+                                                  //| ./plugins
+                                                  //| ./.eclipseproduct
+                                                  //| ./eclipse.ini
+                                                  //| ./libcairo-swt.so
+                                                  //| ./readme
+                                                  //| ./notice.html
+                                                  //| ./epl-v10.html
+                                                  //| ./icon.xpm
+  val directory = new java.io.File(".");          //> directory  : java.io.File = .
+
+  println("Current directory's canonical path: "
+    + directory.getCanonicalPath());              //> Current directory's canonical path: /opt/scala-ide
+  System.out.println("Current directory's absolute  path: "
+    + directory.getAbsolutePath());               //> Current directory's absolute  path: /opt/scala-ide/.
+
   val lines = FileReader.readLines("./sample.hpt")//> lines  : Seq[String] = Stream(#nav, ?)
 
   val tokens = Tokenizer.tokenize(lines)          //> tokens  : Seq[hamplate.Token] = List(LineType(#), RestOfLine(nav), hamplate.
-                                                  //| Newline@65baeab6, hamplate.Intendation@528786e7, LineType(%), RestOfLine(ul)
-                                                  //| , hamplate.Newline@3fa9d205, hamplate.Intendation@261b66ea, hamplate.Intenda
-                                                  //| tion@5101a031, LineType(%), RestOfLine(li), hamplate.Newline@41bc1a83, hampl
-                                                  //| ate.Intendation@2470b02c, hamplate.Intendation@623e2b64, hamplate.Intendatio
-                                                  //| n@5f92e49f, LineType(%), RestOfLine(a href = "#devices-tab"), hamplate.Newli
-                                                  //| ne@24dfb3be, hamplate.Intendation@5a9191db, hamplate.Intendation@afeef51, ha
-                                                  //| mplate.Intendation@6711b47a, hamplate.Intendation@3b5fea73, RestOfLine(Devic
-                                                  //| es), hamplate.Newline@16194279, hamplate.Intendation@545b2144, hamplate.Inte
-                                                  //| ndation@2ae522a0, LineType(%), RestOfLine(li.active), hamplate.Newline@29444
-                                                  //| c60, hamplate.Intendation@42f247ca, hamplate.Intendation@3047411c, hamplate.
-                                                  //| Intendation@1603ae07, LineType(%), RestOfLine(a href = "#options-tab"), hamp
-                                                  //| late.Newline@4b9658db, h
+                                                  //| Newline@bd53a7c, hamplate.Intendation@5bf2a8f5, LineType(%), RestOfLine(ul),
+                                                  //|  hamplate.Newline@18329bfc, hamplate.Intendation@229ec9cd, hamplate.Intendat
+                                                  //| ion@66d2c37c, LineType(%), RestOfLine(li), hamplate.Newline@172036a1, hampla
+                                                  //| te.Intendation@43e28fe3, hamplate.Intendation@4f54a2e6, hamplate.Intendation
+                                                  //| @3d92d2ba, LineType(%), RestOfLine(a href = "#devices-tab"), hamplate.Newlin
+                                                  //| e@7248d0ea, hamplate.Intendation@a8bed44, hamplate.Intendation@688610c4, ham
+                                                  //| plate.Intendation@39b6e978, hamplate.Intendation@1799e2e2, RestOfLine(Device
+                                                  //| s), hamplate.Newline@77fe6f88, hamplate.Intendation@614c8743, hamplate.Inten
+                                                  //| dation@6744719c, LineType(%), RestOfLine(li.active), hamplate.Newline@3e7eed
+                                                  //| bb, hamplate.Intendation@7f29b00a, hamplate.Intendation@9e4a1bf, hamplate.In
+                                                  //| tendation@13707ac, LineType(%), RestOfLine(a href = "#options-tab"), hamplat
+                                                  //| e.Newline@43d8add3, hamp
                                                   //| Output exceeds cutoff limit.
 
   ASTBuilder.build(tokens).toHtml                 //> res0: String = "<div id="nav">
