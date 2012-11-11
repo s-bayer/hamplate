@@ -1,25 +1,47 @@
 #hamplate
 
-Insanely productive template engine for scala projects
+Insanely productive template engine for scala projects.
 
 ## Important ##
-Hamplate at the moment is in the design phase and some time away from a running implementation.
+Hamplate at the moment is in early alpha, so syntax rules might change.
 
 
 ## Why another template engine? ##
-There are quite a few great template engines out there, like jade or haml.
+There are quite a few great template engines out there, like jade, slim or haml.
 But those are not statically typed.
 
 
 The only statically typed template engine I know of is the playframework2 template engine.
-But the Play! engine does not help you deal with the HTML/XML hazzle. You still have to close tags and write class="foobar" statements.
+But the Play! engine does not help you deal with the HTML/XML hazzle.
+You still have to write stuff like this:
 
+    <ul id="dummies" class="sorted">
+        <li>
+            <a class="dummy-link" href="...">
+                <span class="hidden dummy-name">a dummy name</a>
+                <img src="..." />
+            </a>
+        </li>
+    </ul>
 
-Hamplate tries to make writing view code fun again (like jade does).
-Aditionally it gives you a safety net in form of the compiler and maybe some automated tests.
+I'm used to write (and more important read) extremly concise code in scala and want to be able to just write:
 
-It also tries to give sensible defaults for dealing with forms, helpers and CSS/JS includes, when using playframework2.
+    %ul#dummies.sorted
+        %li
+            %a.dummy-link href="..."
+                %span.hidden.dummy-name
+                    a dummy name
+                %img src="..."
 
+This is roughly two thirds of the original code and avoids most unnecessary duplication.
+
+So in summary Hamplate tries to make writing view code fun again (like haml does).
+
+And since it's not actually a full template engine but more a template transformer, it compiles down to statically typed Play! templates.
+
+In the future it might also give you a safety net in form of the compiler and maybe some automated checks.
+
+There will also be some sensible defaults for dealing with forms, helpers and CSS/JS includes, and embedded scala code.
 
 ## Syntax
 
