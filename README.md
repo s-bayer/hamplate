@@ -16,22 +16,22 @@ But the Play! engine does not help you deal with the HTML/XML hazzle.
 You still have to write stuff like this:
 
     <ul id="dummies" class="sorted">
-        <li>
-            <a class="dummy-link" href="...">
-                <span class="hidden dummy-name">a dummy name</a>
-                <img src="..." />
-            </a>
-        </li>
+      <li>
+        <a class="dummy-link" href="...">
+          <span class="hidden dummy-name">a dummy name</a>
+          <img src="..." />
+        </a>
+      </li>
     </ul>
 
 I'm used to write (and more important read) extremly concise code in scala and want to be able to just write:
 
     %ul#dummies.sorted
-        %li
-            %a.dummy-link href="..."
-                %span.hidden.dummy-name
-                    a dummy name
-                %img src="..."
+      %li
+        %a.dummy-link href="..."
+          %span.hidden.dummy-name
+            a dummy name
+          %img src="..."
 
 This is roughly two thirds of the original code and avoids most unnecessary duplication.
 
@@ -51,30 +51,30 @@ So it's basic syntax rules are the same.
 So this:
 
     %html
-        %head
-        %body
-            %h1
-                Headline
-            %p
-                %em
-                    Lorem ipsum ...
+      %head
+      %body
+        %h1
+          Headline
+        %p
+          %em
+            Lorem ipsum ...
 
 renders to
 
 
     <html>
-        <head>
-        </head>
-        <body>
-            <h1>
-                Headline
-            </h1>
-            <p>
-                <em>
-                    Lorem ipsum ...
-                </em>
-            </p>
-        </body>
+      <head>
+      </head>
+      <body>
+        <h1>
+          Headline
+        </h1>
+        <p>
+          <em>
+            Lorem ipsum ...
+          </em>
+        </p>
+      </body>
     </html>
 
 ### Design philosophy ###
@@ -100,7 +100,7 @@ So this html snippet does not change through hamplate:
     <h3> Header </h3>
     <p> Lorem ipsum <p>
     <p>
-        @content
+      @content
     </p>
 
 
@@ -110,12 +110,12 @@ Lines starting with % are the most complex to parse and indicate an html tag.
 As example this:
 
     %a.myclass1#myid.myclass2 href="..." data-toggle="..."
-        random link
+      random link
 
 Get's parsed to
 
     <a class="myclass1 myclass2" id="myid" href="..." data-toggle="...">
-        random link
+      random link
     </a>
 
 The parsing rules are
@@ -148,11 +148,16 @@ renders to
 So as you see the parser is really really dumb and you can't write certain things like
 
     %h1 Lorem ipsum
+
+Which will render to
+
+	<h1 Lorem ipsum>
+	</h1>
     
 But must write
     
     %h1
-        Lorem ipsum
+      Lorem ipsum
     
 This may seem silly, but it's way easier to understand, what the compiler does.
 It just onfolds the class and id shortcuts and copies the remaining line in the starting tag.
@@ -166,28 +171,28 @@ Lines starting with a dot or hash are exactly interpreted as lines starting with
 So this
 
     #navbar.myclass
-        .item
-            Item one
-        .item
-            Item two
+      .item
+        Item one
+      .item
+        Item two
 
 renders exactly like this
 
     %div#navbar.myclass
-        %div.item
-            Item one
-        %div.item
-            Item two
+      %div.item
+        Item one
+      %div.item
+        Item two
 
 which renders to
 
     <div id="navbar" class="myclass">
-        <div class="item">
-            Item one
-        </div>
-        <div class="item">
-            Item two
-        </div>
+      <div class="item">
+        Item one
+      </div>
+      <div class="item">
+        Item two
+      </div>
     </div>
 
 ###### Filters (':') ######
@@ -197,12 +202,12 @@ Filters are used to make writing embedded code (like javascript or markdown) eas
 At the moment there is only one filter. It is used for javascript and works like this:
 
     :javascript
-        alert('hello world!");
+      alert('hello world!");
 
 renders to
 
     <script type="text/javascript">
-        alert('hello world!");
+      alert('hello world!");
     </script>
 
 Closing rules of filters are the same as for tags.
@@ -222,27 +227,27 @@ So you can just write normal Play! template code and the Play!-Compiler will do 
 Example:
 
     %ul
-        @for(u <- user) {
-        %li
-        	%h2
-        		@u.name <small>@u.email</small>
-        	%p
-        		@u.description
-		}
+      @for(u <- user) {
+      %li
+        %h2
+          @u.name <small>@u.email</small>
+        %p
+          @u.description
+	  }
 
 renders to
 
 	<ul>
-		@for(u <- user) {
-		<li>
-			<h2>
-				@u.name <small>@u.email</small>
-			</h2>
-			<p>
-				@u.description
-			</p>
-		</li>
-		}
+	  @for(u <- user) {
+	  <li>
+	    <h2>
+	      @u.name <small>@u.email</small>
+	    </h2>
+	    <p>
+	      @u.description
+	    </p>
+	  </li>
+	  }
 	</ul>
 
 ### Future improvements ###
@@ -253,12 +258,12 @@ Like '-', which puts an @sign at the front of the line, a opening '{' at the end
 So this
 
 	-for(u <- user)
-		@u.name
+	  @u.name
 
 might render to
 
 	@for(u<-user){
-		@u.name
+	  @u.name
 	}
 
 There might also be stuff like autoimports or better support of pattern matching.
