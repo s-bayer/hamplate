@@ -3,8 +3,7 @@
 Insanely productive template engine for scala projects.
 
 ## Important ##
-Hamplate at the moment is in early alpha, so syntax rules might change.
-
+Hamplate is in early alpha, so syntax rules might change.
 
 ## Why another template engine? ##
 There are quite a few great template engines out there, like jade, slim or haml.
@@ -42,6 +41,26 @@ And since it's not actually a full template engine but more a template transform
 In the future it might also give you a safety net in form of the compiler and maybe some automated checks.
 
 There will also be some sensible defaults for dealing with forms, helpers and CSS/JS includes, and embedded scala code.
+
+## Installation ##
+
+Just copy this in your build.sbt
+
+	seq(hamplateSettings:_*)
+	
+	unmanagedResourceDirectories in Compile <+= (baseDirectory) { _ / "app/views/" }
+
+And this in "project/plugins.sbt"
+	
+	addSbtPlugin("syrix" % "hamplate" % "0.1")
+
+After doing this just type
+
+	sbt ~hpt
+
+and all your *.hpt files in app/views will be automatically compiled to *.scala.html files everytime you change a file.
+
+*Be carefull not to overwrite your *.scala.html files by accident!* Happend to me. Really hurts...
 
 ## Syntax
 
