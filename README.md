@@ -184,9 +184,10 @@ It just onfolds the class and id shortcuts and copies the remaining line in the 
 
 Braindead simple and way easier to read than HTML.
 
-#### Divs with class or id attributes ('.','#') ####
+#### Shorthand for divs with class or id attributes ('.','#') ####
 
-Lines starting with a dot or hash are exactly interpreted as lines starting with an additional '%div'
+There is a shorthand for divs, where a tag without a tagname is parsed as a div-tag.
+So lines starting with a dot or hash are exactly interpreted as lines starting with an additional '%div'
 
 So this
 
