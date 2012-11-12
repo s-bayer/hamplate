@@ -52,7 +52,7 @@ Just copy this in your build.sbt
 
 And this in "project/plugins.sbt"
 	
-	addSbtPlugin("syrix" % "hamplate" % "0.1")
+	addSbtPlugin("syrix" % "hamplate" % "0.1.0")
 
 After doing this just type
 
