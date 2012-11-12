@@ -5,7 +5,7 @@ object HelloBuild extends Build {
   val hwsettings = Defaults.defaultSettings ++ Seq(
     organization := "syrix",
     name := "hamplate",
-    version := "1.0-SNAPSHOT",
+    version := "0.1.0",
     scalaVersion := "2.9.0-1")
 
   import HamplateKeys._
