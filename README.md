@@ -124,7 +124,7 @@ So this html snippet does not change through hamplate:
     </p>
 
 
-##### Html-Tags ('%') #####
+#### Html-Tags ('%') ####
 Lines starting with % are the most complex to parse and indicate an html tag.
 
 As example this:
@@ -184,7 +184,7 @@ It just onfolds the class and id shortcuts and copies the remaining line in the 
 
 Braindead simple and way easier to read than HTML.
 
-##### Divs with class or id attributes ('.','#') #####
+#### Divs with class or id attributes ('.','#') ####
 
 Lines starting with a dot or hash are exactly interpreted as lines starting with an additional '%div'
 
@@ -215,7 +215,7 @@ which renders to
       </div>
     </div>
 
-##### Filters (':') #####
+#### Filters (':') ####
 
 Filters are used to make writing embedded code (like javascript or markdown) easier.
 
@@ -240,7 +240,7 @@ Always remember: The compiler is really really dumb.
 
 In the future there might be compiler errors or warnings to indicate the use of special symbols inside of a filter.
 
-##### Embedded scala #####
+#### Embedded scala ####
 Lines starting with '{', '@' or '}' will not be evalualted by the parser (they are normal text-lines).
 So you can just write normal Play! template code and the Play!-Compiler will do the heavy lifting and compile your code.
 
