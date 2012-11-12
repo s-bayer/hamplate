@@ -236,13 +236,13 @@ Closing rules of filters are the same as for tags.
 *Everything inside a filter is still parsed as hamplate code*
 
 So you should never use '%', '.', ':' or '#' at the start of a line inside of a filter.
-At the moment the compiler will just happily transform your code and mess up your script tag.
+At the moment the compiler will just happily transform your code and mess up your script code.
 Always remember: The compiler is really really dumb.
 
 In the future there might be compiler errors or warnings to indicate the use of special symbols inside of a filter.
 
 #### Embedded scala ####
-Lines starting with '{', '@' or '}' will not be evalualted by the parser (they are normal text-lines).
+Lines starting with '{', '@' or '}' will not be evaluated by the parser (they are normal text-lines).
 So you can just write normal Play! template code and the Play!-Compiler will do the heavy lifting and compile your code.
 
 Example:
