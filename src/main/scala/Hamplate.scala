@@ -9,19 +9,14 @@ object Hamplate extends Plugin {
     val outputDir = SettingKey[String]("output_dir", "The output directory for Plays *.scala.html files.")
   }
 
-  override lazy val settings = Seq(commands ++= Seq( /*myCommand, */ hpt))
+  override lazy val settings = Seq(commands ++= Seq(hpt))
 
-  /*lazy val myCommand =
-    Command.command("hello") { (state: State) =>
-      println("Hi!")
-      state
-    }*/
-
-  // A simple, multiple-argument command that prints "Hi" followed by the arguments.
-  //   Again, it leaves the current state unchanged.
+  // Compile all files in the source dir to the output dir
   lazy val hpt = Command.args("hpt", "<src=<dirname> >, <out=<dirname> >") { (state, args) =>
-    var src = "app/views"
-    var out = "app/views"
+    val extracted = Project.extract(state)
+    import extracted._
+    var src = get(sourceDir)
+    var out = get(outputDir)
     for (a <- args) {
       a.split("=") match {
         case Array("src", dir) =>
@@ -51,6 +46,6 @@ object Hamplate extends Plugin {
     }
 */
   val hamplateSettings = Seq(
-    sourceDir := "src/main/resources",
-    outputDir := "app/views/out")
+    sourceDir := "app/views",
+    outputDir := "app/views")
 }
