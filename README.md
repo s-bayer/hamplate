@@ -54,7 +54,9 @@ Just copy this in your "project/Project.scala" file
       override lazy val projects = Seq(root)
       lazy val root = Project("hamplate-test", file(".")).settings( Hamplate.hamplateSettings : _*).
       settings(
-        Hamplate.HamplateKeys.sourceDir := "app/views",
+      	// These folders need to be the same folder or completely disjunct (meaning no folder is a subfolder of the other)
+        Hamplate.HamplateKeys.sourceDir := "app/views", // Folder containing your *.hpt files
+        Hamplate.HamplateKeys.outputDir := "app/views", // Folder which will contain your *.scala.html files
         unmanagedResourceDirectories in Compile <+= (baseDirectory) { _ / "app/views/" }
       )
     }
