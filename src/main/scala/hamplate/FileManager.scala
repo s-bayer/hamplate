@@ -73,6 +73,11 @@ object FileManager {
         val files = dir.filter(_.getName.endsWith(extension))
 
         println("Compiling " + files.size + " files in folder " + src.getName())
+        // create output dir
+        val outDir = new File(targetDir)
+        outDir.mkdir()
+
+        // actually compile files
         files.map { compile(_, targetDir) }
 
         for (f <- dir) {
