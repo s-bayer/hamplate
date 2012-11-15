@@ -5,7 +5,7 @@ object Hamplate extends Plugin {
   import HamplateKeys._
   object HamplateKeys {
     //val hpt = TaskKey[Unit]("hpt", "Compile hamplate sources.")
-    val sourceDir = SettingKey[String]("source_dir", "The source directory of all *.coffee files.")
+    val sourceDir = SettingKey[String]("source_dir", "The source directory of all *.hpt files.")
     val outputDir = SettingKey[String]("output_dir", "The output directory for Plays *.scala.html files.")
   }
 
