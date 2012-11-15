@@ -79,6 +79,10 @@ and all your *.hpt files in app/views will be automatically compiled to *.scala.
 
 *Be carefull not to overwrite your *.scala.html files by accident!* Happend to me. Really hurts...
 
+### Troubleshooting ###
+
+If you want to update to a new version and sbt doesn't pull the new version try to clear out "~/.sbt/staging/".
+
 ## Syntax
 
 ### Basic Syntax ###
