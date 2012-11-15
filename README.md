@@ -44,15 +44,32 @@ There will also be some sensible defaults for dealing with forms, helpers and CS
 
 ## Installation ##
 
-Just copy this in your build.sbt
+Just copy this in your "project/Project.scala" file
 
-	seq(hamplateSettings:_*)
-	
-	unmanagedResourceDirectories in Compile <+= (baseDirectory) { _ / "app/views/" }
+    import sbt._
+    import sbt.Keys._
+    
+    object MyBuild extends Build
+    {
+      override lazy val projects = Seq(root)
+      lazy val root = Project("hamplate-test", file(".")).settings( Hamplate.hamplateSettings : _*).
+      settings(
+        Hamplate.HamplateKeys.sourceDir := "app/views",
+        unmanagedResourceDirectories in Compile <+= (baseDirectory) { _ / "app/views/" }
+      )
+    }
 
-And this in "project/plugins.sbt"
+
+And this in "project/project/Build.scala"
 	
-	addSbtPlugin("syrix" % "hamplate" % "0.1.0")
+    import sbt._
+    
+    object PluginDef extends Build {
+      override lazy val projects = Seq(root)
+      lazy val root = Project("plugins", file(".")).dependsOn( hamplatePlugin )
+      lazy val hamplatePlugin = uri("git://github.com/syrix/hamplate")
+    }
+
 
 After doing this just type
 
